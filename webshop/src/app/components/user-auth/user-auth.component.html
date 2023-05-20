@@ -1,0 +1,135 @@
+<div class="user-auth">
+  <div *ngIf="!showLogin" class="sign-up">
+    <h1 class="text-primary text-center">User Signup</h1>
+    <form #userSignUp="ngForm" class="common-form" (ngSubmit)="signUp(userSignUp)" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col-xs-4 col-md-4 col-sm-4">
+          <label for="fname" class="form-label">First name:</label>
+          <input type="text" class="form-control" id="fname" placeholder="Enter first name" ngModel name="firstName"
+            required>
+        </div>
+        <div class="col-xs-4 col-md-4 col-sm-4">
+          <label for="lname" class="form-label">Last name:</label>
+          <input type="text" class="form-control" id="lname" placeholder="Enter last name" ngModel name="lastName"
+            required>
+        </div>
+        <div class="col-xs-4 col-md-4 col-sm-4">
+          <label for="email" class="form-label">E-mail:</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter e-mail" ngModel #email="ngModel"
+            name="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
+          <p class="invalid-input text-danger"><span *ngIf="email.invalid && email.touched ">Please enter valid
+              input</span></p>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+          <label for="phone" class="form-label">Phone number:</label>
+          <input type="text" class="form-control" id="phone" placeholder="Enter phone number" ngModel name="phone"
+            #phone="ngModel" pattern="^(\+[1-9]\d{0,2})?\s*([1-9]\d{1,2})\s*\d{3}\s*\d{4}$" required>
+          <p class="invalid-input text-danger"><span *ngIf="phone.invalid && phone.touched ">Please enter valid
+              input</span></p>
+        </div>
+        <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" class="form-control" id="username" placeholder="Enter username" ngModel name="username"
+            required>
+        </div>
+        <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+          <label for="pwd" class="form-label">Password:</label>
+          <input type="password" class="form-control" id="pwd" placeholder="Enter password" ngModel name="password"
+            minlength="2" maxlength="20" #password="ngModel" required>
+          <p class="invalid-input text-danger"><span *ngIf="password.invalid && password.touched ">Please enter valid
+              input</span></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+          <label for="adr" class="form-label">Address:</label>
+          <input type="text" class="form-control" id="adr" placeholder="Enter address" ngModel name="address" required>
+        </div>
+        <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+          <label for="city" class="form-label">City:</label>
+          <input type="text" class="form-control" id="city" placeholder="Enter city name" ngModel name="city" required>
+        </div>
+        <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+          <label for="country" class="form-label">Country:</label>
+          <input type="text" class="form-control" id="country" placeholder="Enter country name" ngModel name="country"
+            required>
+        </div>
+      </div>
+      <div class="row align-items-end">
+        <div class="col-xs-4 col-md-7  mt-2">
+          <label for="formFile" class="form-label">Profile picture:</label>
+          <input class="form-control" type="file"  (change)="onFileSelected($event)" ngModel id="formFile" name="avatarPath">
+        </div>
+        <div class="col-xs-4 col-md-3 mt-5">
+          <button type="submit" [disabled]="userSignUp.invalid" id="signUp" class="btn btn-primary">Submit</button>
+        </div>
+
+      </div>
+
+
+
+      <p class="text-center mt-4">Already Have Account ? <a (click)="openLogin()" class="text-primary">Click Here</a>
+      </p>
+    </form>
+  </div>
+  <div *ngIf="showLogin" class="login">
+    <h1 class="text-primary text-center">User Login</h1>
+    <form #userLogin="ngForm" class="common-form" (ngSubmit)="login(userLogin,mymodal)">
+      <p class="error-p">{{authError}}</p>
+      <input type="text" class="form-control mb-3" name="username" placeholder="Enter username" ngModel
+        #username="ngModel" required />
+      <input type="password" class="form-control mb-3" name="password" placeholder="Enter User Password" ngModel
+        minlength="2" maxlength="20" #password="ngModel" required />
+
+      <p class="invalid-input text-danger"><span *ngIf="password.invalid && password.touched ">Please enter valid
+          input</span></p>
+      <button [disabled]="userLogin.invalid" type="submit"
+        class="btn btn-primary mb-3">Login</button>
+      <p>Want to Create Account ? <a (click)="openSignUp()" class="text-primary">Click Here</a></p>
+    </form>
+  </div>
+  
+  <ng-template #mymodal let-modal>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter pin code</h5>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="row">
+            <div class="col-md-3">
+              <input class=" pin form-control" #pin1 maxlength="1"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                (keyup)="move($event,'',pin1,pin2)" />
+            </div>
+            <div class="col-md-3">
+              <input class="pin form-control" #pin2 maxlength="1"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                (keyup)="move($event,pin1,pin2,pin3)" />
+            </div>
+            <div class="col-md-3">
+              <input class="pin form-control" #pin3 maxlength="1"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                (keyup)="move($event,pin2,pin3,pin4)" />
+            </div>
+            <div class="col-md-3">
+              <input class="pin form-control" #pin4 maxlength="1"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                (keyup)="move($event,pin3,pin4,'')" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Close</button>
+          <button type="submit" class="btn btn-primary" (click)="enterPin(pin1,pin2,pin3,pin4,modal)"
+            data-bs-dismiss="modal">Continue</button>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-template>
+</div>

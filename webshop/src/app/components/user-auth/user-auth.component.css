@@ -1,0 +1,26 @@
+.login{
+    border-radius: 25px;
+    border: 2px solid #3B71CA;
+    padding: 20px;
+}
+.sign-up{
+    margin-top: 20px;
+    border-radius: 25px;
+    border: 2px solid #3B71CA;
+    padding: 10px;
+}
+.invalid-input{
+    margin-bottom: 0%;
+}
+.pin{
+    width: 50px;
+    text-align: center;
+}
+.col-md-3{
+    display: inline-block
+}
+.user-auth{
+    overflow: auto;
+    max-height: 100vh
+}
+

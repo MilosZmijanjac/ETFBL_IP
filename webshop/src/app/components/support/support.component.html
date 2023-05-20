@@ -1,0 +1,29 @@
+<button class="button float" data-bs-toggle="tooltip" data-bs-placement="top" title="Contact support" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap" ><img src="../../assets/icons/chat.png" width="35" height="35"></button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form  #supportForm="ngForm" class="common-form" (ngSubmit)="contactSupport(supportForm)">
+          <div class="mb-3">
+            <label for="subject" class="col-form-label">Subject:</label>
+            <input type="text" class="form-control" id="subject" ngModel name="subject" required>
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" ngModel name="message" required></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary"  [disabled]="supportForm.invalid" data-bs-dismiss="modal">Send message</button>
+          </div>
+        </form>
+      </div>
+     
+    </div>
+  </div>
+</div>

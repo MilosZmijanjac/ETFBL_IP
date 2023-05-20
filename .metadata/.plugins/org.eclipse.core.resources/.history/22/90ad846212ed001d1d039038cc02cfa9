@@ -1,0 +1,124 @@
+package model.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.bean.LocationBean;
+import util.ConnectionPool;
+import util.DaoUtil;
+
+public class LocationDao {
+	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
+
+	private static final String SELECT_ALL = "SELECT * FROM public.location;";
+	private static final String SELECT_BY_ID = "SELECT * FROM public.location where id=?;";
+	private static final String ADD_LOCATION = "INSERT INTO public.location(address,city,country) VALUES (?,?,?);";
+	private static final String UPDATE_LOCATION = "UPDATE public.location SET address=?,city=?,country=? WHERE id=?;";
+	private static final String DELETE_LOCATION = "DELETE FROM public.location WHERE id=?";
+
+	public static List<LocationBean> getAll() throws SQLException {
+		Connection connection = null;
+		ResultSet resultSet = null;
+		List<LocationBean> locations = new ArrayList<>();
+
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, SELECT_ALL, false);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				locations.add(new LocationBean(resultSet.getLong("id"),
+						resultSet.getString("address"),
+						resultSet.getString("city"),
+						resultSet.getString("country")));
+			}
+			preparedStatement.close();
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+		return locations;
+	}
+
+	public static LocationBean getById(Long Id) throws SQLException {
+		Connection connection = null;
+		ResultSet resultSet = null;
+
+		Object values[] = { Id };
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, SELECT_BY_ID, false, values);
+
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				return new LocationBean(resultSet.getLong("id"),
+						resultSet.getString("address"),
+						resultSet.getString("city"),
+						resultSet.getString("country"),
+						resultSet.getBigDecimal("latitude"),
+						resultSet.getBigDecimal("longitude"));
+			}
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+		return null;
+	}
+
+	public static boolean add(LocationBean location) throws SQLException {
+		Connection connection = null;
+		ResultSet resultSet = null;
+		boolean result = false;
+		Object values[] = { location.getAddress(),location.getCity(),location.getCountry(),location.getLatitude(),location.getLongitude() };
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, ADD_LOCATION, true, values);
+			preparedStatement.executeUpdate();
+			resultSet = preparedStatement.getGeneratedKeys();
+
+			if (preparedStatement.getUpdateCount() > 0)
+				result = true;
+			if (resultSet.next())/**/
+				location.setId(Long.parseLong(resultSet.getString(1)));
+			preparedStatement.close();
+
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+		return result;
+	}
+
+	public static boolean update(LocationBean location) throws SQLException {
+		Connection connection = null;
+		Object values[] = { location.getAddress(),location.getCity(),location.getCountry(),location.getId() };
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, UPDATE_LOCATION, false, values);
+
+			int res = preparedStatement.executeUpdate();
+			if (res == 1) {
+				return true;
+			}
+			preparedStatement.close();
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+		return false;
+	}
+
+	public static boolean deleteById(Long id) throws SQLException {
+		Connection connection = null;
+		Object values[] = { id };
+		boolean result = false;
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, DELETE_LOCATION, false, values);
+			result = preparedStatement.executeUpdate() == 1;
+			preparedStatement.close();
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+		return result;
+	}
+}

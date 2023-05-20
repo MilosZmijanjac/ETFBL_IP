@@ -1,0 +1,67 @@
+<div class="container-fluid" *ngIf="products.length !=0">
+    <div class="row">
+        <aside class="col-lg-9">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Unit price</th>
+                                <th scope="col">Count</th>
+                                <th scope="col" width="120">Total price</th>
+                                <th scope="col" class="text-right d-none d-md-block" width="200"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let item of products; let i = index">
+                                <td>
+                                    <figure class="itemside align-items-center">
+                                        <div class="aside"><img src="{{item.image}}" class="img-sm"></div>
+                                        <figcaption class="info"> <a href="#" class="title text-dark" data-abc="true">{{item.title}}</a>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <div class="price-wrap"> <var class="price">${{item.price}}</var> </div>
+                                </td>
+                                <td>
+                                    <div class="price-wrap"> <var class="price">{{item.count}}</var> </div>
+                                </td>
+                                <td>
+                                    <div class="price-wrap"> <var class="price">${{item.price*item.count}}</var> </div>
+                                </td>
+                                <td class="text-right d-none d-md-block"> <a (click)="removeItem(item)" class="btn btn-light" data-abc="true"> Remove</a> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aside>
+        <aside class="col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <dl class="dlist-align">
+                        <dt>Grand total price:</dt>
+                        <dd class="text-right ml-3">${{grandTotal}}</dd>
+                    </dl>
+                    <hr> <a (click)="checkout()" class="btn btn-out btn-primary btn-square btn-main" data-abc="true"> Make Purchase </a> <a routerLink="/products"  class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Continue Shopping</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+<ng-container *ngIf="products.length ==0">
+    <div class="container">
+        <div class="card">
+            <h5 class="card-title">My Cart</h5>
+        </div>
+        <div class="center">
+            <img src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90" alt="">
+            <h4>Your cart is empty!</h4>
+            <h6>Add item to it now</h6>
+            <button routerLink="/products" class="btn btn-primary">Shop Now</button>
+        </div>
+    </div>
+</ng-container>
