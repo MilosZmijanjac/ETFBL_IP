@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { product } from '../../data-type';
 import { ProductService } from '../../services/product.service';
+import { Product } from 'src/app/models/domains/Product';
 
 @Component({
   selector: 'app-home',
@@ -8,17 +8,12 @@ import { ProductService } from '../../services/product.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
- popularProducts:undefined|product[];
- trendyProducts:undefined | product[];
+ popularProducts:Product[]=[];
   constructor(private product:ProductService) {}
 
   ngOnInit(): void {
-    this.product.popularProducts().subscribe((data)=>{
+    this.product.popularProductList().subscribe(data=>{
       this.popularProducts=data;
-    })
-
-    this.product.trendyProducts().subscribe((data)=>{
-      this.trendyProducts=data;
     })
   }
 }

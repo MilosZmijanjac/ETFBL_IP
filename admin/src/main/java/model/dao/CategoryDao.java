@@ -23,14 +23,14 @@ public class CategoryDao {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
-	private static final String SELECT_ALL = "SELECT * FROM public.category;";
-	private static final String SELECT_BY_ID = "SELECT * FROM public.category where id=?;";
-	private static final String SELECT_WITH_PAGINATION="SELECT * FROM public.category OFFSET ? LIMIT ? ";
-	private static final String SELECT_ATTRIBUTES_BY_ID = "SELECT special_attributes FROM public.category where id=?;";
-	private static final String ADD_CATEGORY = "INSERT INTO public.category(icon_path, name, special_attributes) VALUES (?,?,?);";
-	private static final String UPDATE_CATEGORY = "UPDATE public.category SET icon_path=?, name=?, special_attributes=? WHERE id=?;";
-	private static final String DELETE_CATEGORY = "DELETE FROM public.category WHERE id=?";
-	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.category;";
+	private static final String SELECT_ALL = "SELECT * FROM public.categories;";
+	private static final String SELECT_BY_ID = "SELECT * FROM public.categories where id=?;";
+	private static final String SELECT_WITH_PAGINATION="SELECT * FROM public.categories OFFSET ? LIMIT ? ";
+	private static final String SELECT_ATTRIBUTES_BY_ID = "SELECT special_attributes FROM public.categories where id=?;";
+	private static final String ADD_CATEGORY = "INSERT INTO public.categories( name, special_attributes) VALUES (?,?);";
+	private static final String UPDATE_CATEGORY = "UPDATE public.categories SET name=?, special_attributes=? WHERE id=?;";
+	private static final String DELETE_CATEGORY = "DELETE FROM public.categories WHERE id=?";
+	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.categories;";
 
 	public static List<CategoryBean> getAll() throws SQLException, IOException {
 		Connection connection = null;
@@ -42,11 +42,10 @@ public class CategoryDao {
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, SELECT_ALL, false);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				ArrayList<AttributeBean> l = new Gson().fromJson(resultSet.getString("special_attributes"),
+				ArrayList<AttributeBean> list = new Gson().fromJson(resultSet.getString("special_attributes"),
 						new TypeToken<ArrayList<AttributeBean>>() {
 						}.getType());
-				categories.add(new CategoryBean(resultSet.getLong("id"), resultSet.getString("name"),
-						resultSet.getString("icon_path"), l));
+				categories.add(new CategoryBean(resultSet.getLong("id"), resultSet.getString("name"), list));
 			}
 			preparedStatement.close();
 		} finally {
@@ -64,11 +63,10 @@ public class CategoryDao {
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, SELECT_WITH_PAGINATION, false,values);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				ArrayList<AttributeBean> l = new Gson().fromJson(resultSet.getString("special_attributes"),
+				ArrayList<AttributeBean> list = new Gson().fromJson(resultSet.getString("special_attributes"),
 						new TypeToken<ArrayList<AttributeBean>>() {
 						}.getType());
-				categories.add(new CategoryBean(resultSet.getLong("id"), resultSet.getString("name"),
-						resultSet.getString("icon_path"), l));
+				categories.add(new CategoryBean(resultSet.getLong("id"), resultSet.getString("name"),list));
 			}
 			preparedStatement.close();
 		} finally {
@@ -104,11 +102,10 @@ public class CategoryDao {
 
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				ArrayList<AttributeBean> l = new Gson().fromJson(resultSet.getString("special_attributes"),
+				ArrayList<AttributeBean> list = new Gson().fromJson(resultSet.getString("special_attributes"),
 						new TypeToken<ArrayList<AttributeBean>>() {
 						}.getType());
-				return new CategoryBean(resultSet.getLong("id"), resultSet.getString("name"),
-						resultSet.getString("icon_path"), l);
+				return new CategoryBean(resultSet.getLong("id"), resultSet.getString("name"),list);
 			}
 		} finally {
 			connectionPool.checkIn(connection);
@@ -126,14 +123,17 @@ public class CategoryDao {
 
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				return new Gson().fromJson(resultSet.getString("special_attributes"),
+				ArrayList<AttributeBean> result=new Gson().fromJson(resultSet.getString("special_attributes"),
 						new TypeToken<ArrayList<AttributeBean>>() {
 						}.getType());
+				if(result==null)
+					result=new ArrayList<>();
+				return result;
 			}
 		} finally {
 			connectionPool.checkIn(connection);
 		}
-		return null;
+		return new ArrayList<AttributeBean>();
 	}
 	public static boolean add(CategoryBean category) throws SQLException {
 		Connection connection = null;
@@ -142,7 +142,7 @@ public class CategoryDao {
 		PGobject jsonObject = new PGobject();
 		jsonObject.setType("json");
 		jsonObject.setValue(gson.toJson(category.getSpecialAttributes()));
-		Object values[] = { category.getIconPath(), category.getName(), jsonObject };
+		Object values[] = { category.getName(), jsonObject };
 		try {
 			connection = connectionPool.checkOut();
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, ADD_CATEGORY, true, values);
@@ -165,7 +165,7 @@ public class CategoryDao {
 		PGobject jsonObject = new PGobject();
 		jsonObject.setType("json");
 		jsonObject.setValue(gson.toJson(category.getSpecialAttributes()));
-		Object values[] = { category.getIconPath(),category.getName(),jsonObject, category.getId() };
+		Object values[] = { category.getName(),jsonObject, category.getId() };
 		try {
 			connection = connectionPool.checkOut();
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, UPDATE_CATEGORY, false, values);
@@ -194,16 +194,5 @@ public class CategoryDao {
 		}
 		return result;
 	}
-	public static void main(String... args) throws SQLException, IOException, ClassNotFoundException {
-		AttributeBean ab = new AttributeBean();
-		ab.setName("ime");
-		ab.setUnit("metar");
-		CategoryBean cb = new CategoryBean();
-		ArrayList<AttributeBean> bb = new ArrayList<AttributeBean>();
-		bb.add(ab);
-		cb.setName("meso");
-		cb.setSpecialAttributes(bb);
-		CategoryDao.add(cb);
-		// System.out.println(CategoryDao.getAll().get(0).getSpecialAttributes().get(0).getUnit());
-	}
+
 }

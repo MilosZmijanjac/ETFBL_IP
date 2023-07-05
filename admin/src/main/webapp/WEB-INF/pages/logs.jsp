@@ -35,8 +35,6 @@
 					<th>Timestamp</th>
 					<th>Type</th>
 					<th>Path</th>
-					<th>User Id</th>
-					<th>Username</th>
 					<th>Message</th>
 				</tr>
 			</thead>
@@ -48,8 +46,6 @@
 					<td><%=log.getTimestamp()%></td>
 					<td><%=log.getType() %></td>
 					<td><%=log.getPath() %></td>
-					<td><%=log.getUser_id() %></td>
-					<td><%=log.getUsername() %></td>
 					<td><%=log.getMessage() %></td>
 				</tr>
 				<%} %>

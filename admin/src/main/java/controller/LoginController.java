@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.dao.UserDao;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns="/login")
@@ -30,6 +31,9 @@ public class LoginController extends HttpServlet {
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
 		

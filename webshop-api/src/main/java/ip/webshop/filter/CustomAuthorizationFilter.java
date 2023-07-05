@@ -21,18 +21,21 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET,POST");
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,OPTIONS,DELETE,PATCH");
         response.setHeader("Access-Control-Allow-Headers", "X-PINGOTHER,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
-        if(request.getServletPath().equals("/api/user/login") || request.getServletPath().equals("/api/token/refresh")) {
+        
+        if(request.getServletPath().equals("/api/user/login") || request.getServletPath().equals("/api/user/token/refresh")) {
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -45,7 +48,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    
                     authorities.add(new SimpleGrantedAuthority(roles[0]));
                     
                     UsernamePasswordAuthenticationToken authenticationToken =

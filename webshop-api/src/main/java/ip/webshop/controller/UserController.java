@@ -1,6 +1,7 @@
 package ip.webshop.controller;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,12 +32,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
+import ip.webshop.model.entity.Product;
 import ip.webshop.model.entity.User;
+import ip.webshop.model.enumeration.LogType;
 import ip.webshop.model.request.PinRequest;
 import ip.webshop.model.request.RegistrationRequest;
 import ip.webshop.model.response.PinResponse;
 import ip.webshop.model.response.UserInfoResponse;
+import ip.webshop.service.LogService;
 import ip.webshop.service.PinService;
+import ip.webshop.service.ProductService;
 import ip.webshop.service.UserService;
 
 @RestController
@@ -48,7 +53,11 @@ public class UserController {
     @Autowired
     private PinService pinService;
     @Autowired
+    private ProductService productService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private LogService logService;
 
     @GetMapping
 	public ResponseEntity<List<User>> getAllUsers() {
@@ -68,8 +77,75 @@ public class UserController {
         System.out.println(username);
         User user=userService.getUserByUsername(username);
         UserInfoResponse response=new UserInfoResponse();
-        if(user==null)
+        if(user==null){
+        logService.writeLog(LogType.WARNING, "/api/users/info/" + username, "Request user info failed", Instant.now());
         return ResponseEntity.notFound().build();
+        }
+        else{
+            response.setId(user.getId());
+            response.setAddress(user.getAddress());
+            response.setAvatarPath(user.getAvatarPath());
+            response.setCity(user.getCity());
+            response.setCountry(user.getCountry());
+            response.setUsername(user.getUsername());
+            response.setEmail(user.getEmail());
+            response.setPhone(user.getPhone());
+            response.setFirstName(user.getFirstName());
+            response.setLastName(user.getLastName());
+            logService.writeLog(LogType.INFO, "/api/users/info/" + username, "Request user info", Instant.now());
+            return ResponseEntity.ok(response);
+        }
+        
+    }
+    @GetMapping("/seller/{id}")
+    public ResponseEntity<?> getSellerById(@PathVariable Long id){
+        System.out.println(id);
+        Product prod=productService.getProductById(id);
+        User user=userService.getUserById(prod.getUserId());
+        UserInfoResponse response=new UserInfoResponse();
+        if(user==null){
+            logService.writeLog(LogType.WARNING, "/api/users/seller/" + id, "Request seller info failed", Instant.now());
+            return ResponseEntity.notFound().build();
+        }        
+        else{
+            response.setId(user.getId());
+            response.setAddress(user.getAddress());
+            response.setAvatarPath(user.getAvatarPath());
+            response.setCity(user.getCity());
+            response.setCountry(user.getCountry());
+            response.setUsername(user.getUsername());
+            response.setEmail(user.getEmail());
+            response.setPhone(user.getPhone());
+            response.setFirstName(user.getFirstName());
+            response.setLastName(user.getLastName());
+            logService.writeLog(LogType.INFO, "/api/users/seller/" + id, "Request seller info", Instant.now());
+            return ResponseEntity.ok(response);
+        }
+        
+    }
+    @PostMapping("/register")
+    public ResponseEntity<?> createUser(@RequestBody RegistrationRequest request){
+      if(userService.usernameExists(request.getUsername())){
+        logService.writeLog(LogType.WARNING, "/api/users/register/" , "Username already exists: "+request.getUsername(), Instant.now());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists");
+      }
+       
+       request.setPassword(passwordEncoder.encode(request.getPassword()));
+       logService.writeLog(LogType.INFO, "/api/users/register/" , "User created: "+request.getUsername(), Instant.now());
+       return ResponseEntity.ok(userService.addPendingUser(request));
+    }
+    @PostMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody RegistrationRequest request){
+      
+      if(!request.getPassword().equals(""))
+       request.setPassword(passwordEncoder.encode(request.getPassword()));
+       
+       User user=userService.updateUser(request);
+       UserInfoResponse response=new UserInfoResponse();
+        if(user==null){
+            logService.writeLog(LogType.WARNING, "/api/users/update/" , "Update failed, user not found: "+request.getUsername(), Instant.now());
+            return ResponseEntity.notFound().build();
+        }        
         else{
             response.setAddress(user.getAddress());
             response.setAvatarPath(user.getAvatarPath());
@@ -80,16 +156,9 @@ public class UserController {
             response.setPhone(user.getPhone());
             response.setFirstName(user.getFirstName());
             response.setLastName(user.getLastName());
-            return ResponseEntity.ok(response);
-        }
-        
+            logService.writeLog(LogType.INFO, "/api/users/update/" , "Update succees: "+request.getUsername(), Instant.now());
+       return ResponseEntity.ok(response);
     }
-    @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody RegistrationRequest request){
-      if(userService.usernameExists(request.getUsername()))
-       return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists");
-       request.setPassword(passwordEncoder.encode(request.getPassword()));
-       return ResponseEntity.ok(userService.addPendingUser(request));
     }
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

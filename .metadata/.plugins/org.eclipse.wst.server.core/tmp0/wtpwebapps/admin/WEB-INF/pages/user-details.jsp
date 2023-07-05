@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="model.bean.UserBean"%>
-<%@page import="model.bean.LocationBean"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,11 +17,9 @@
  <%@include file="/WEB-INF/fragments/navbar.jspf"%>
  <%
     UserBean user=null;
- 	LocationBean location=null;
 	Object o=request.getAttribute("user");
     if(o!=null){
     	user=(UserBean)o;
-    	location=(LocationBean)request.getAttribute("location");
     }
 	%>
 <div class="container">
@@ -31,26 +28,26 @@
             <div class="row">
                 <div class="col-xs-4 col-md-4 col-sm-4"> 
                 <label for="fname" class="form-label">First name:</label>
-                <input type="text" class="form-control" id="fname" readonly value=<%=user.getFirstName() %> name="fname">
+                <input type="text" class="form-control" id="fname" readonly value="<%=user.getFirstName() %>" name="fname">
                 </div>
                 <div class="col-xs-4 col-md-4 col-sm-4">
                 <label for="lname" class="form-label">Last name:</label>
-                <input type="text" class="form-control" id="lname" readonly value=<%=user.getLastName() %> name="lname">
+                <input type="text" class="form-control" id="lname" readonly value="<%=user.getLastName() %>" name="lname">
                 </div>
                 <div class="col-xs-4 col-md-4 col-sm-4">
                 <label for="email" class="form-label">E-mail:</label>
-                <input type="email" class="form-control" id="email" readonly value=<%=user.getEmail()%> name="email">
+                <input type="email" class="form-control" id="email" readonly value="<%=user.getEmail()%>" name="email">
                 </div>
                 
            </div>
             <div class="row">
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
                 <label for="phone" class="form-label">Phone number:</label>
-                <input type="tel" class="form-control" id="phone" readonly value=<%=user.getPhone() %> name="phone" pattern="^\d{9}$">
+                <input type="tel" class="form-control" id="phone" readonly value="<%=user.getPhone() %>" name="phone" pattern="^\d{9}$">
                 </div>
                   <div class="col-xs-4 col-md-4 col-sm-4 mt-2"> 
                 <label for="uname" class="form-label">Username:</label>
-                <input type="text" class="form-control" id="uname" readonly value=<%=user.getUsername() %> name="uname">
+                <input type="text" class="form-control" id="uname" readonly value="<%=user.getUsername() %>" name="uname">
                 </div>
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
                 <label for="pwd" class="form-label">Password:</label>
@@ -60,15 +57,15 @@
            <div class="row">
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
                 <label for="adr" class="form-label">Address:</label>
-                <input type="text" class="form-control" id="adr" readonly value=<%=location.getAddress() %> name="adr" >
+                <input type="text" class="form-control" id="adr" readonly value="<%=user.getAddress() %>" name="adr" >
                 </div>
                  <div class="col-xs-4 col-md-4 col-sm-4 mt-2"> 
                 <label for="city" class="form-label">City:</label>
-                <input type="text" class="form-control" id="city" readonly value=<%=location.getCity() %> name="city">
+                <input type="text" class="form-control" id="city" readonly value="<%=user.getCity() %>" name="city">
                 </div>
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
                 <label for="country" class="form-label">Country:</label>
-                <input type="text" class="form-control" id="country" readonly value=<%=location.getCountry() %> name="country">
+                <input type="text" class="form-control" id="country" readonly value="<%=user.getCountry() %>" name="country">
                 </div>
            </div>
             <div class="row">

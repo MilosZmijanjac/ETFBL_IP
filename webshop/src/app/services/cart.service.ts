@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { cartItem, product } from '../data-type';
+import { BehaviorSubject} from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-import { HttpClient } from '@angular/common/http';
+import { Product } from '../models/domains/Product';
+import { CartItem } from '../models/domains/CartItem';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +10,11 @@ import { HttpClient } from '@angular/common/http';
 export class CartService {
 
 
-  public cartItemList: cartItem[] = []
+  public cartItemList: CartItem[] = []
   public productList = new BehaviorSubject<any>([]);
-  public search = new BehaviorSubject<string>("");
 
   constructor(private cookieService: CookieService) { }
-  private getLocalCart(): cartItem[] {
+  private getLocalCart(): CartItem[] {
     if (this.cookieService.check('cart')) {
       this.cartItemList = JSON.parse(this.cookieService.get('cart'));
       return Object.values(this.cartItemList);
@@ -29,14 +28,14 @@ export class CartService {
     this.productList.next(cartItems);
     return this.productList.asObservable();
   }
-  newCartItem = (product: product): cartItem => ({
+  newCartItem = (product: Product): CartItem => ({
     id: product.id,
     price: product.price,
     count: 1,
-    title: product.name,
-    image: product.image
+    title: product.title,
+    image: product.imagesPath
   });
-  addToCart(product: product) {
+  addToCart(product: Product) {
     let newCartItem = this.newCartItem(product);
     let index = this.cartItemList.map(a => a.id).indexOf(newCartItem.id);
 
@@ -50,12 +49,12 @@ export class CartService {
   }
   getTotalPrice(): number {
     let grandTotal = 0;
-    this.cartItemList.map((a: cartItem) => {
+    this.cartItemList.map((a: CartItem) => {
       grandTotal += a.price * a.count;
     })
     return grandTotal;
   }
-  removeCartItem(product: cartItem) {
+  removeCartItem(product: CartItem) {
     let index = this.cartItemList.map(a => a.id).indexOf(product.id);
     if (this.cartItemList[index].count === 1)
       this.cartItemList.splice(index, 1);

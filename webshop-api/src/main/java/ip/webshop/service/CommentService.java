@@ -8,7 +8,7 @@ public interface CommentService {
     List<Comment> getAllCommentsForProduct(Long productId);
     void readAllForProduct(Long productId);
     List<Comment> getAllUnreadForUser(Long userId);
-    void addComment(Comment comment);
+    Comment addComment(Comment comment);
     List<Comment> getAllUnreadCommentsForUserProducts(Long userId);
     
 }

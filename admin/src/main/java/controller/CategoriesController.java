@@ -107,11 +107,11 @@ public class CategoriesController extends HttpServlet {
 			int recordsPerPage = 10;
 			if (request.getParameter("page") != null)
 				page = Integer.parseInt(request.getParameter("page"));
-			int noOfRecords = attributes.size();
+			int noOfRecords = attributes==null?0:attributes.size();
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			request.setAttribute("numOfPagesAttributes", noOfPages);
 			request.setAttribute("currentPageAttributes", page);
-			request.setAttribute("attributes", attributes.subList((page - 1) * recordsPerPage, (attributes.size()<10)?attributes.size():recordsPerPage));
+			request.setAttribute("attributes", attributes.subList((page - 1) * recordsPerPage, (noOfRecords<10)?noOfRecords:recordsPerPage));
 			request.getRequestDispatcher("/WEB-INF/pages/attributes.jsp").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -174,9 +174,10 @@ public class CategoriesController extends HttpServlet {
 	private void showAttributeEdit(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
+			Integer selectedId=Integer.parseInt(request.getParameter("sel"));
 			CategoryBean cat=CategoryDao.getById(Long.parseLong(request.getParameter("id")));
-			AttributeBean attribute = cat.getSpecialAttributes().get(Integer.parseInt(request.getParameter("sel")));
-			request.setAttribute("selectedId", (Integer.parseInt(request.getParameter("sel"))));
+			AttributeBean attribute = cat.getSpecialAttributes().get(selectedId);
+			request.setAttribute("selectedId", selectedId);
 			request.setAttribute("selectedAttr", attribute);
 			request.getRequestDispatcher("/WEB-INF/pages/attribute-edit.jsp").forward(request, response);
 		} catch (NumberFormatException | SQLException  | IOException | ServletException e) {
@@ -204,7 +205,7 @@ public class CategoriesController extends HttpServlet {
 		try {
 			CategoryBean category = new CategoryBean();
 			category.setName(request.getParameter("cname"));
-			category.setIconPath(request.getParameter("file"));
+			category.setSpecialAttributes(new ArrayList<>());
 			CategoryDao.add(category);
 			response.sendRedirect("/admin/categories");
 		} catch (NumberFormatException | SQLException  | IOException e) {
@@ -228,10 +229,8 @@ public class CategoriesController extends HttpServlet {
 	private void editCategory(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
-			CategoryBean category = new CategoryBean();
-			category.setId(Long.parseLong(request.getParameter("id")));
+			CategoryBean category = CategoryDao.getById(Long.parseLong(request.getParameter("id")));
 			category.setName(request.getParameter("cname"));
-			category.setIconPath(request.getParameter("file"));
 			CategoryDao.update(category);
 			response.sendRedirect("/admin/categories");
 		} catch (NumberFormatException | SQLException  | IOException e) {

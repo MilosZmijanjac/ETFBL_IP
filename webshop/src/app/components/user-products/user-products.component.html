@@ -1,0 +1,35 @@
+<div class="products d-flex" id="wrapper">
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <infinite-scroll class="container row justify-content-center" (scrolled)="onScroll()">
+                <ng-container *ngFor="let item of filterProducts">
+                    <div class="card col-md-2">
+                        <div class="image-container container-fluid" *ngIf="item.status==='ACTIVE'">
+                            <img src="{{item.imagesPath}}" alt="" class="product-image"
+                                routerLink="/details/{{item.id}}">
+                            <img src="../../assets/icons/active.png" alt="" class="status-image">
+                        </div>
+                        <div class="image-container container-fluid" *ngIf="item.status!=='ACTIVE'">
+                            <img src="{{item.imagesPath}}" alt="" class="product-image"  routerLink="/details/{{item.id}}">
+                            <img src="../../assets/icons/deactivated.png" alt="" class="status-image">
+                        </div>
+                        <h5>{{item.title}}</h5>
+                        <label><strong>Price:</strong> ${{item.price}}</label>
+                    </div>
+                </ng-container>
+            </infinite-scroll>
+        </div>
+    </div>
+    <app-add-new-product></app-add-new-product>
+    <app-user-products-filter (productFilter)="filter($event)"></app-user-products-filter>
+</div>
+<ng-container *ngIf="filterProducts.length==0">
+    <div class="container1">
+        <div class="card1">
+            <h5 class="card-title1">No Products</h5>
+        </div>
+        <div class="center1">
+            <img src="..\..\assets\icons\emptyCart.png" alt="">
+        </div>
+    </div>
+</ng-container>

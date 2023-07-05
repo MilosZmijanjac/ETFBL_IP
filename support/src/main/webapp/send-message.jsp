@@ -15,7 +15,6 @@ message.setRead(true);
 message.setSentTime(Instant.now());
 message.setUserMail("support@webshop.ip");
 message.setText(request.getParameter("text"));
-message.setUserId((Long)request.getSession().getAttribute("id"));
 message.setUsername((String)request.getSession().getAttribute("username"));
 MessageDao.add(message);
 MailUtil.send(request.getParameter("email"),message.getText());

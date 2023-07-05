@@ -11,8 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -32,10 +30,9 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String title;
     private String description;
     private BigDecimal price;
-    private BigDecimal amount;
     private String imagesPath;
     private String address;
     private String city;
@@ -49,10 +46,6 @@ public class Product {
     @Type(type = "json")
     @Column(columnDefinition = "json")
     private List<Attribute> extendedAttributes;
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
-    @ManyToOne
-    @JoinColumn(name="category_id")
-    private Category category;
+    private Long userId;
+    private Long categoryId;
 }

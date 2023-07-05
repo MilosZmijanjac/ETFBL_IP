@@ -8,6 +8,7 @@ import java.util.List;
 public interface UserService {
     List<User> getAllUsers();
     User getUserById(Long id);
+    User updateUser(RegistrationRequest user);
     User getUserByUsername(String username);
     User addPendingUser(RegistrationRequest request);
     boolean usernameExists(String username);

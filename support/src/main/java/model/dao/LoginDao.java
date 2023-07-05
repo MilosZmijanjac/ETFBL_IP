@@ -7,11 +7,12 @@ import java.sql.SQLException;
 
 import util.ConnectionPool;
 import util.DaoUtil;
+import util.MD5;
 
 public class LoginDao {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 	
-	private static final String LOGIN = "SELECT id FROM public.user_account WHERE username = ? AND password = ? AND type='SUPPORT';";
+	private static final String LOGIN = "SELECT id FROM public.users WHERE username = ? AND password = ? AND type='SUPPORT';";
 	
 	public static Long loginUser(String username,String password) throws SQLException {
 		Connection connection = null;
@@ -19,7 +20,7 @@ public class LoginDao {
 		if(username.isBlank()||password.isBlank())
 			return -1L;
 
-		Object values[] = { username,password };
+		Object values[] = { username,MD5.getMd5(password) };
 		try {
 			connection = connectionPool.checkOut();
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, LOGIN, false, values);

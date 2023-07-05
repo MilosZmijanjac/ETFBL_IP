@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="model.bean.UserBean"%>
-<%@page import="model.bean.LocationBean"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +30,13 @@
                 </div>
                 <div class="col-xs-4 col-md-4 col-sm-4">
                 <label for="value" class="form-label">Value:</label>
-                <input type="text" class="form-control" id="value" placeholder="Enter value" name="value">
+                <!-- <input type="text" class="form-control" id="value" placeholder="Enter value type" name="value"> -->
+                <select class="form-select" aria-label="Default select example" id="value" name="value">
+ 					 <option selected>Select value type</option>
+  					 <option value="Number">Number</option>
+   					 <option value="String">String</option>
+					 <option value="Select">Selection</option>
+				</select>
                 </div>
                  <div class="col-xs-4 col-md-4 col-sm-4">
                 <label for="pvalues" class="form-label">Possible values:</label>

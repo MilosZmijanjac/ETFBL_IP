@@ -1,5 +1,6 @@
 package ip.webshop.controller;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ip.webshop.model.entity.FileInfo;
+import ip.webshop.model.enumeration.LogType;
 import ip.webshop.model.response.ResponseMessage;
 import ip.webshop.service.FilesStorageService;
+import ip.webshop.service.LogService;
 
 
 @RestController
@@ -31,22 +34,46 @@ public class FilesController {
 
   @Autowired
   FilesStorageService storageService;
+  @Autowired
+  LogService logService;
 
-  @PostMapping("/upload")
-  public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+  @PostMapping("/upload/{username}")
+  public ResponseEntity<ResponseMessage> uploadProfilePic(@RequestParam("files") MultipartFile[] files,@PathVariable String username) {
     String message = "";
     try {
       List<String> fileNames = new ArrayList<>();
 
       Arrays.asList(files).stream().forEach(file -> {
-        storageService.save(file);
+        storageService.saveProfilePic(file,username);
         fileNames.add(file.getOriginalFilename());
       });
 
       message = "Uploaded the files successfully: " + fileNames;
+      logService.writeLog(LogType.INFO,"/api/files/upload/"+username , "Uploading file "+fileNames, Instant.now());
       return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
     } catch (Exception e) {
       message = "Fail to upload files!";
+      logService.writeLog(LogType.ERROR,"/api/files/upload/"+username , "uploading file failed", Instant.now());
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+    }
+  }
+  @PostMapping("/upload/{username}/{id}")
+  public ResponseEntity<ResponseMessage> uploadProductPic(@RequestParam("files") MultipartFile[] files,@PathVariable String username,@PathVariable Long id) {
+    String message = "";
+    try {
+      List<String> fileNames = new ArrayList<>();
+
+      Arrays.asList(files).stream().forEach(file -> {
+        storageService.saveProductPic(file,username,id);
+        fileNames.add(file.getOriginalFilename());
+      });
+
+      message = "Uploaded the files successfully: " + fileNames;
+      logService.writeLog(LogType.INFO,"/api/files/upload/"+username , "uploading file "+fileNames, Instant.now());
+      return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+    } catch (Exception e) {
+      message = "Fail to upload files!";
+      logService.writeLog(LogType.ERROR,"/api/files/upload/"+username , "uploading file failed", Instant.now());
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
     }
   }

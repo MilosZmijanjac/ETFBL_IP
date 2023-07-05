@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setCountry(request.getCountry());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-        user.setAvatarPath(request.getAvatarPath());
+        user.setAvatarPath("http://127.0.0.1:8008/Users/"+user.getUsername()+"/profile.png");
         user.setCreated(Instant.now());
         user.setStatus(UserStatus.PENDING);
         user.setType(UserType.WEBSHOP);
@@ -105,5 +105,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findById(id).get();
         user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(RegistrationRequest user){
+         User oldUser=userRepository.findByUsername(user.getUsername());
+         oldUser.setAddress(user.getAddress());
+         oldUser.setCity(user.getCity());
+         oldUser.setCountry(user.getCountry());
+         oldUser.setFirstName(user.getFirstName());
+         oldUser.setLastName(user.getLastName());
+         oldUser.setEmail(user.getEmail());
+         oldUser.setPhone(user.getPhone());
+         if(!user.getPassword().equals(""))
+         oldUser.setPassword(user.getPassword());
+         userRepository.save(oldUser);
+         return oldUser;
     }
 }

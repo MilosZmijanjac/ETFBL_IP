@@ -14,3 +14,13 @@
 .navbar{
   height: 45px;
 }
+
+@media (max-width: 900px) {
+  .navbar-collapse{ 
+    top: 45px;
+    background-color: blue;
+    position:fixed;
+    left:0px;
+    
+  }
+}

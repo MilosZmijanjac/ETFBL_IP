@@ -9,9 +9,9 @@ import util.DaoUtil;
 public class ProductDao {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
-	private static final String DELETE_PRODUCT = "DELETE FROM public.product WHERE id=?";
-	private static final String DELETE_PRODUCT_BY_USER_ID = "DELETE FROM public.product WHERE user_id=?";
-	private static final String DELETE_PRODUCT_BY_CATEGORY_ID = "DELETE FROM public.product WHERE category_id=?";
+	private static final String DELETE_PRODUCT = "DELETE FROM public.products WHERE id=?";
+	private static final String DELETE_PRODUCT_BY_USER_ID = "DELETE FROM public.products WHERE user_id=?";
+	private static final String DELETE_PRODUCT_BY_CATEGORY_ID = "DELETE FROM public.products WHERE category_id=?";
 
 	public static boolean deleteById(Long id) throws SQLException {
 		Connection connection = null;

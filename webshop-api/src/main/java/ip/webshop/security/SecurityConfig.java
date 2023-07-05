@@ -61,9 +61,10 @@ public class SecurityConfig {
         http.csrf().disable();
         //http.cors().disable();
         http.sessionManagement(management -> management.sessionCreationPolicy(STATELESS));
-        http.authorizeHttpRequests(requests -> requests.antMatchers("/api/user/login/**", "/api/token/refresh/**","/api/user/register/**","/api/user/pin/**","/api/user/info/**","/api/files/**").permitAll());
+        http.authorizeHttpRequests(requests -> requests.antMatchers("/api/user/login/**","/api/support/**","/api/order/**","/api/category/**","/api/comment/**", "/api/products/**", "/api/products/home/**","/api/user/token/refresh/**","/api/user/seller/**","/api/user/register/**","/api/user/pin/**","/api/user/update/**","/api/user/info/**","/api/files/**").permitAll());
         
-        http.authorizeHttpRequests().antMatchers(POST, "/api/user/register/**","/api/user/pin/**","/api/files/**").permitAll();
+        http.authorizeHttpRequests().antMatchers(POST, "/api/user/register/**","/api/order/**","/api/products/**","/api/user/pin/**","/api/files/**","/api/comment/**","/api/user/update/**").permitAll();
+        http.authorizeHttpRequests().antMatchers(GET,"/api/order/**","/api/category/**","/api/order/mrki02/**","/api/comment/**","/api/user/token/refresh/**").permitAll();
         http.authorizeHttpRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -20,10 +20,11 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Instant timestamp;
-    private String text;
+    private Long parentId;
+    private Instant createdAt;
+    private String body;
     private Long userId;
+    private String username;
     @Enumerated(EnumType.STRING)
     private CommentStatus status;
     private Long productId;

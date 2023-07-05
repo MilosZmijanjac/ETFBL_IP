@@ -14,8 +14,8 @@ public class LogServiceImpl implements LogService {
     private  LogRepository logRepository;
 
     @Override
-    public void writeLog(Long user_id,String username, LogType type, String path, String message, Instant timestamp) {
-        logRepository.save(new Log(user_id, username, type, path, message, timestamp));
+    public void writeLog( LogType type, String path, String message, Instant timestamp) {
+        logRepository.save(new Log(  type, path, message, timestamp));
     }
 
 }

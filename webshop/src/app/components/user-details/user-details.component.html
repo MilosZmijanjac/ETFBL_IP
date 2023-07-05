@@ -1,1 +1,69 @@
-<p>user-details works for {{this.userInfo.username}}</p>
+<div class="profile">
+    <div  class="user-details">
+      <h1 class="text-primary text-center">User Details</h1>
+      <form #userEdit="ngForm" class="common-form" (ngSubmit)="editUser(userEdit)" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-xs-4 col-md-4 col-sm-4">
+            <label for="fname" class="form-label">First name:</label>
+            <input type="text" class="form-control" id="fname"  [(ngModel)]="userInfo.firstName" name="firstName" >
+          </div>
+          <div class="col-xs-4 col-md-4 col-sm-4">
+            <label for="lname" class="form-label">Last name:</label>
+            <input type="text" class="form-control" id="lname" [(ngModel)]="userInfo.lastName" ngModel name="lastName">
+          </div>
+          <div class="col-xs-4 col-md-4 col-sm-4">
+            <label for="email" class="form-label">E-mail:</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="userInfo.email" ngModel #email="ngModel"
+              name="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" >
+            <p class="invalid-input text-danger"><span *ngIf="email.invalid && email.touched ">Please enter valid
+                input</span></p>
+          </div>
+  
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+            <label for="phone" class="form-label">Phone number:</label>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="userInfo.phone" ngModel name="phone"
+              #phone="ngModel" pattern="^(\+[1-9]\d{0,2})?\s*([1-9]\d{1,2})\s*\d{3}\s*\d{4}$">
+            <p class="invalid-input text-danger"><span *ngIf="phone.invalid && phone.touched ">Please enter valid
+                input</span></p>
+          </div>
+          <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" class="form-control" id="username" [(ngModel)]="userInfo.username" ngModel name="username" readonly>
+          </div>
+          <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+            <label for="pwd" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password" ngModel name="password"
+              minlength="2" maxlength="20" #password="ngModel">
+            <p class="invalid-input text-danger"><span *ngIf="password.invalid && password.touched ">Please enter valid
+                input</span></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+            <label for="adr" class="form-label">Address:</label>
+            <input type="text" class="form-control" id="adr" [(ngModel)]="userInfo.address" ngModel name="address" >
+          </div>
+          <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+            <label for="city" class="form-label">City:</label>
+            <input type="text" class="form-control" id="city" [(ngModel)]="userInfo.city" ngModel name="city" >
+          </div>
+          <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
+            <label for="country" class="form-label">Country:</label>
+            <input type="text" class="form-control" id="country" [(ngModel)]="userInfo.country" ngModel name="country">
+          </div>
+        </div>
+        <div class="row align-items-end">
+          <div class="col-xs-4 col-md-7  mt-2">
+            <label for="formFile" class="form-label">Profile picture:</label>
+            <input class="form-control" type="file"  (change)="onFileSelected($event)"  ngModel id="formFile" name="avatarPath" >
+          </div>
+          <div class="col-xs-4 col-md-3 mt-5">
+            <button type="submit" [disabled]="userEdit.invalid" id="edit" class="btn btn-primary">Submit</button>
+          </div>
+  
+        </div>
+      </form>
+    </div>    
+  </div>

@@ -1,0 +1,99 @@
+.container {
+    max-height: 100vh;
+    overflow: auto;
+    margin-top: 2%;
+    width: max-content;
+    height: 80vh;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    padding: 10px;
+    margin: 8px;
+    max-width: 100ch;
+    min-width: max-content;
+    min-height: max-content;
+}
+
+.product-image {
+    width: 150px;
+    height: 150px;
+    left: 50%;
+    top: 50%;
+}
+
+.status-image {
+    width: 40px;
+    height: 40px;
+    left: 75%;
+    top: 80%;
+    position: absolute;
+
+}
+
+.card:hover {
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+    transition: 0.3s ease-in-out;
+    transform: scale(1.01);
+}
+
+.products {
+    margin-top: 5%;
+}
+
+.center1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.card1 {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: #fff;
+}
+
+.card1 {
+    height: 60vh;
+    margin: 25px;
+    padding: 25px;
+}
+
+.center1 img {
+    text-decoration: none;
+    color: inherit;
+    border: none;
+    outline: none;
+    height: 162px;
+    width: 250px;
+    margin: 20px 0px;
+}
+
+.card-title1 {
+    margin-top: 15%;
+}

@@ -1,0 +1,63 @@
+
+    <div class="outer-wrapper">
+    <div class="table-wrapper">
+    <table>
+        <thead>
+            <th>#</th>
+            <th>Id:</th>
+            <th>Time:</th>
+            <th>Payment method:</th>
+            <th>Total price:</th>
+            <th>Actions:</th>
+          
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of orders;let i=index;">
+                <td>{{i+1}}</td>
+                <td> {{ order.id }}</td>
+                <td> {{ order.timestamp }}</td>
+                <td> {{ order.paymentMethod }}</td>
+                <td> {{ order.totalPrice }}</td>
+                
+                <td>
+                    <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#ordersItemModal" data-bs-whatever="@getbootstrap" (click)="selectOrder(order.id)"> Show details</button>
+                </td>
+              </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="ordersItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Order Items</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-modal-wrapper">
+            <table>
+                <thead>
+                    <th>#</th>
+                    <th>Product name:</th>
+                    <th>Quantity:</th>
+                    <th>Price:</th>
+                    <th>Total price:</th>
+                  
+                </thead>
+                <tbody>
+                    <tr *ngFor="let orderItem of orderItems;let i = index">
+                        <td>{{ i+1}}</td>
+                        <td> {{ orderItem.productName }}</td>
+                        <td>{{ orderItem.quantity }}</td>
+                        <td> {{ orderItem.price }}</td>
+                        <td> {{ orderItem.price*orderItem.quantity }}</td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+</div>

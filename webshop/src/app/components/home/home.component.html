@@ -3,32 +3,28 @@
   <ngb-carousel *ngIf="popularProducts">
     <ng-template  *ngFor="let item of popularProducts" ngbSlide>
       <div class="picsum-img-wrapper">
-        <a routerLink="/details/{{item.id}}"> <img class="product-header-image" src="{{item.image}}" alt="Random first slide">
+        <a routerLink="/details/{{item.id}}"> <img class="product-header-image" src="{{item.imagesPath}}" alt="Random first slide">
      </a>
         </div>
       <div class="carousel-caption">
-        <h3>{{item.name}}</h3>
+        <h3>{{item.title}}</h3>
         <p>{{item.description}}</p>
       </div>
     </ng-template>
   </ngb-carousel>
 </div>
-<div class="col">
-  <ngb-carousel *ngIf="popularProducts">
-    <ng-template  *ngFor="let item of popularProducts" ngbSlide>
-      <div class="picsum-img-wrapper">
-        <a routerLink="/details/{{item.id}}"> <img class="product-header-image" src="{{item.image}}" alt="Random first slide">
-     </a>
-        </div>
-      <div class="carousel-caption">
-        <h3>{{item.name}}</h3>
-        <p>{{item.description}}</p>
-      </div>
-    </ng-template>
-  </ngb-carousel>
 </div>
 
-</div>
+<ng-container *ngIf="popularProducts.length ==0">
+  <div class="container">
+      <div class="card">
+          <h5 class="card-title">No Products</h5>
+      </div>
+      <div class="center">
+          <img src="..\..\assets\icons\emptyCart.png" alt="">
+      </div>
+  </div>
+</ng-container>
 
 
   

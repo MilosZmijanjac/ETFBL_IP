@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="model.bean.UserBean"%>
-<%@page import="model.bean.LocationBean"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,11 +17,9 @@
  <%@include file="/WEB-INF/fragments/navbar.jspf"%>
  <%
     UserBean user=null;
- 	LocationBean location=null;
 	Object o=request.getAttribute("user");
     if(o!=null){
     	user=(UserBean)o;
-    	location=(LocationBean)request.getAttribute("location");
     }
 	%>
 <div class="container">
@@ -60,15 +57,15 @@
            <div class="row">
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
                 <label for="adr" class="form-label">Address:</label>
-                <input type="text" class="form-control" id="adr" readonly value=<%=location.getAddress() %> name="adr" >
+                <input type="text" class="form-control" id="adr" readonly value=<%=user.getAddress() %> name="adr" >
                 </div>
                  <div class="col-xs-4 col-md-4 col-sm-4 mt-2"> 
                 <label for="city" class="form-label">City:</label>
-                <input type="text" class="form-control" id="city" readonly value=<%=location.getCity() %> name="city">
+                <input type="text" class="form-control" id="city" readonly value=<%=user.getCity() %> name="city">
                 </div>
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
                 <label for="country" class="form-label">Country:</label>
-                <input type="text" class="form-control" id="country" readonly value=<%=location.getCountry() %> name="country">
+                <input type="text" class="form-control" id="country" readonly value=<%=user.getCountry() %> name="country">
                 </div>
            </div>
             <div class="row">

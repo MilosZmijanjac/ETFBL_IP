@@ -14,18 +14,18 @@ import util.DaoUtil;
 public class MessageDao {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
-	private static final String SELECT_ALL = "SELECT * FROM public.support_message;";
-	private static final String SELECT_ALL_WITH_PAGINATION="SELECT * FROM public.support_message WHERE user_mail!='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
-	private static final String SELECT_READ_WITH_PAGINATION="SELECT * FROM public.support_message WHERE read='1' AND user_mail!='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
-	private static final String SELECT_UNREAD_WITH_PAGINATION="SELECT * FROM public.support_message WHERE read='0' AND user_mail!='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
-	private static final String SELECT_SUPPORT_WITH_PAGINATION="SELECT * FROM public.support_message WHERE user_mail='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
-	private static final String SELECT_BY_ID= "SELECT * FROM public.support_message WHERE id=?;";
-	private static final String ADD_MESSAGE= "INSERT INTO public.support_message(read, sent_time, text,user_id,username,user_mail) VALUES (?,NOW(),?,?,?,?);";
-	private static final String UPDATE_READ = "UPDATE public.support_message SET read=? WHERE id=?;";
-	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.support_message WHERE user_mail!='support@webshop.ip' AND text LIKE ?;";
-	private static final String COUNT_ALL_READ="SELECT COUNT(*) FROM public.support_message WHERE read='1' AND user_mail!='support@webshop.ip' AND text LIKE ?;";
-	private static final String COUNT_ALL_UNREAD="SELECT COUNT(*) FROM public.support_message WHERE read='0' AND user_mail!='support@webshop.ip' AND text LIKE ?;";
-	private static final String COUNT_ALL_SUPPORT="SELECT COUNT(*) FROM public.support_message WHERE user_mail='support@webshop.ip' AND text LIKE ? ;";
+	private static final String SELECT_ALL = "SELECT * FROM public.support_messages;";
+	private static final String SELECT_ALL_WITH_PAGINATION="SELECT * FROM public.support_messages WHERE user_mail!='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
+	private static final String SELECT_READ_WITH_PAGINATION="SELECT * FROM public.support_messages WHERE read='1' AND user_mail!='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
+	private static final String SELECT_UNREAD_WITH_PAGINATION="SELECT * FROM public.support_messages WHERE read='0' AND user_mail!='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
+	private static final String SELECT_SUPPORT_WITH_PAGINATION="SELECT * FROM public.support_messages WHERE user_mail='support@webshop.ip' AND text LIKE ? ORDER BY sent_time DESC OFFSET ? LIMIT ? ";
+	private static final String SELECT_BY_ID= "SELECT * FROM public.support_messages WHERE id=?;";
+	private static final String ADD_MESSAGE= "INSERT INTO public.support_messages(read, sent_time, text,username,user_mail) VALUES (?,NOW(),?,?,?);";
+	private static final String UPDATE_READ = "UPDATE public.support_messages SET read=? WHERE id=?;";
+	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.support_messages WHERE user_mail!='support@webshop.ip' AND text LIKE ?;";
+	private static final String COUNT_ALL_READ="SELECT COUNT(*) FROM public.support_messages WHERE read='1' AND user_mail!='support@webshop.ip' AND text LIKE ?;";
+	private static final String COUNT_ALL_UNREAD="SELECT COUNT(*) FROM public.support_messages WHERE read='0' AND user_mail!='support@webshop.ip' AND text LIKE ?;";
+	private static final String COUNT_ALL_SUPPORT="SELECT COUNT(*) FROM public.support_messages WHERE user_mail='support@webshop.ip' AND text LIKE ? ;";
 
 	public static List<MessageBean> getAll() throws SQLException {
 		Connection connection = null;
@@ -38,8 +38,8 @@ public class MessageDao {
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				messages.add(new MessageBean(resultSet.getLong("id"), resultSet.getString("text"),
-						resultSet.getBoolean("read"), resultSet.getTimestamp("sent_time").toInstant(),
-						resultSet.getLong("user_id"), resultSet.getString("username"),
+						resultSet.getBoolean("read"), resultSet.getTimestamp("sent_time").toInstant()
+						, resultSet.getString("username"),
 						resultSet.getString("user_mail")));
 			}
 			preparedStatement.close();
@@ -79,7 +79,7 @@ public class MessageDao {
 			while (resultSet.next()) {
 				messages.add(new MessageBean(resultSet.getLong("id"), resultSet.getString("text"),
 						resultSet.getBoolean("read"), resultSet.getTimestamp("sent_time").toInstant(),
-						resultSet.getLong("user_id"), resultSet.getString("username"),
+						 resultSet.getString("username"),
 						resultSet.getString("user_mail")));
 			}
 			preparedStatement.close();
@@ -101,7 +101,7 @@ public class MessageDao {
 			while (resultSet.next()) {
 				return new MessageBean(resultSet.getLong("id"), resultSet.getString("text"),
 						resultSet.getBoolean("read"), resultSet.getTimestamp("sent_time").toInstant(),
-						resultSet.getLong("user_id"), resultSet.getString("username"),
+						 resultSet.getString("username"),
 						resultSet.getString("user_mail"));
 			}
 		} finally {
@@ -113,7 +113,7 @@ public class MessageDao {
 		Connection connection = null;
 		ResultSet resultSet = null;
 		boolean result = false;
-		Object values[] = { message.getRead(),message.getText(),message.getUserId(),message.getUsername(),message.getUserMail() };
+		Object values[] = { message.getRead(),message.getText(),message.getUsername(),message.getUserMail() };
 		try {
 			connection = connectionPool.checkOut();
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, ADD_MESSAGE, true, values);

@@ -22,18 +22,14 @@ import lombok.NoArgsConstructor;
 public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long user_id;
-    private String username = "";
+    private Long id;    
     @Enumerated(EnumType.STRING)
     private LogType type;
     private String path;
     private String message;
     private Instant timestamp;
 
-    public Log(Long user_id,String username, LogType type,String path, String message, Instant timestamp) {
-        this.user_id=user_id;
-        this.username = username;
+    public Log(LogType type,String path, String message, Instant timestamp) {
         this.type = type;
         this.path=path;
         this.message = message;

@@ -2,13 +2,11 @@ package ip.webshop.model.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -27,11 +25,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String iconPath;
-    
+        
     @Type(type = "json")
     @Column(columnDefinition = "json")
     private List<Attribute> specialAttributes;
-    @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Product> products;
 }

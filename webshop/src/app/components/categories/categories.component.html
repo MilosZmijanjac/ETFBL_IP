@@ -1,25 +1,54 @@
-<button class="button float" data-bs-toggle="tooltip" data-bs-placement="top" title="Filter categories" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap" ><img src="../../assets/icons/filter.png" width="35" height="35"></button>
+<button class="button float" data-bs-toggle="tooltip" data-bs-placement="top" title="Filter categories" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-whatever="@getbootstrap" ><img src="../../assets/icons/filter.png" width="35" height="35"></button>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Filter</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form  #supportForm="ngForm" class="common-form" (ngSubmit)="contactSupport(supportForm)">
+        <form  #filterForms="ngForm" class="common-form" (ngSubmit)="filterProducts(filterForms)">
           <div class="mb-3">
-            <label for="subject" class="col-form-label">Subject:</label>
-            <input type="text" class="form-control" id="subject" ngModel name="subject" required>
+            <label for="categories" class="col-form-label">Categories:</label>
+            <select name="category" aria-label="Default select example" [(ngModel)]="selectedCategory" (change)="getAttributes()" class="form-select"  id="categories">
+              <!--<option [ngValue]="null">All</option>-->
+              <option *ngFor="let category of categories" [ngValue]="category" >
+                  {{category.name}}
+              </option>
+          </select>
           </div>
           <div class="mb-3">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text" ngModel name="message" required></textarea>
+            <label for="price"class="col-form-label">Price:</label>
+            <input type="text" class="form-control mb-3" ngModel placeholder="From:" name="priceFrom" id="price">
+            <input type="text" class="form-control" ngModel placeholder="To:" name="priceTo" id="price">
           </div>
+          <div class="mb-3">
+            <label for="state"class="col-form-label" >State:</label>
+            <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedState" id="state" name="state">
+              <option value="ALL">All</option>
+              <option value="NEW">New</option>
+              <option value="USED">Used</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="city"class="col-form-label">City:</label>
+            <input type="text" class="form-control" ngModel name="city" id="city">
+          </div>
+          <div class="mb-3">
+            <label for="country"class="col-form-label">Country:</label>
+            <input type="text" class="form-control" ngModel name="country" id="country">
+          </div>
+          <div *ngIf="selectedCategory" >
+            <div class="mb-3" *ngFor="let subcategory of attributes; let i = index">
+              <label for="{{subcategory.name}}"class="col-form-label">{{subcategory.name}}:</label>
+              <input type="text" class="form-control" ngModel name="{{subcategory.name}}" id="{{subcategory.name}}">
+            </div>
+          </div>
+        
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary"  [disabled]="supportForm.invalid" data-bs-dismiss="modal">Send message</button>
+            <button type="submit" class="btn btn-primary"  [disabled]="filterForms.invalid" data-bs-dismiss="modal">Filter</button>
           </div>
         </form>
       </div>

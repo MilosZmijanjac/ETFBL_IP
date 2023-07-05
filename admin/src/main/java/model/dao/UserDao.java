@@ -1,5 +1,6 @@
 package model.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,24 +8,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import model.bean.UserBean;
 import model.enumeration.UserStatus;
 import model.enumeration.UserType;
 import util.ConnectionPool;
 import util.DaoUtil;
+import util.MD5;
 
 public class UserDao {
 
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
-	private static final String SELECT_ALL = "SELECT * FROM public.user_account;";
-	private static final String SELECT_BY_ID = "SELECT * FROM public.user_account WHERE id=?;";
-	private static final String ADD_USER = "INSERT INTO public.user_account(avatar_path, created, email, first_name, last_name, password,phone, status, type, address,city,country,username) VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?,?,?,?, ?, ?);";
-	private static final String UPDATE_USER = "UPDATE public.user_account	SET avatar_path=?, email=?, first_name=?, last_name=?, password=?, phone=?, status=?, type=?, username=?,address=?,city=?,country=? WHERE id=?;";
-	private static final String DELETE_USER = "DELETE FROM public.user_account WHERE id=?";
-	private static final String LOGIN = "SELECT EXISTS (SELECT * FROM public.user_account WHERE username = ? AND password = ? AND type='ADMIN' AND status='ACTIVE');";
-	private static final String SELECT_WITH_PAGINATION="SELECT * FROM public.user_account ORDER BY created DESC OFFSET ? LIMIT ? ";
-	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.user_account;";
+	private static final String SELECT_ALL = "SELECT * FROM public.users;";
+	private static final String SELECT_BY_ID = "SELECT * FROM public.users WHERE id=?;";
+	private static final String ADD_USER = "INSERT INTO public.users(avatar_path, created, email, first_name, last_name, password,phone, status, type, address,city,country,username) VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?,?,?,?,  ?);";
+	private static final String UPDATE_USER = "UPDATE public.users	SET email=?, first_name=?, last_name=?,  phone=?, status=?, type=?, username=?,address=?,city=?,country=? WHERE id=?;";
+	private static final String DELETE_USER = "DELETE FROM public.users WHERE id=?";
+	private static final String LOGIN = "SELECT EXISTS (SELECT * FROM public.users WHERE username = ? AND password = ? AND type='ADMIN' AND status='ACTIVE');";
+	private static final String SELECT_WITH_PAGINATION="SELECT * FROM public.users ORDER BY created DESC OFFSET ? LIMIT ? ";
+	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.users;";
 
 	public static List<UserBean> getAll() throws SQLException {
 		Connection connection = null;
@@ -37,7 +40,7 @@ public class UserDao {
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				users.add(new UserBean(resultSet.getLong("id"), resultSet.getString("first_name"),
-						resultSet.getString("last_name"), resultSet.getString("email"), resultSet.getString("username"),
+						resultSet.getString("last_name"), resultSet.getString("username"), resultSet.getString("email"),
 						resultSet.getString("password"), resultSet.getString("phone"),
 						resultSet.getString("avatar_path"), resultSet.getTimestamp("created").toInstant(),
 						UserStatus.valueOf(resultSet.getString("status")),
@@ -62,7 +65,7 @@ public class UserDao {
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				users.add(new UserBean(resultSet.getLong("id"), resultSet.getString("first_name"),
-						resultSet.getString("last_name"), resultSet.getString("email"), resultSet.getString("username"),
+						resultSet.getString("last_name"), resultSet.getString("username"), resultSet.getString("email"),
 						resultSet.getString("password"), resultSet.getString("phone"),
 						resultSet.getString("avatar_path"), resultSet.getTimestamp("created").toInstant(),
 						UserStatus.valueOf(resultSet.getString("status")),
@@ -106,7 +109,7 @@ public class UserDao {
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				return new UserBean(resultSet.getLong("id"), resultSet.getString("first_name"),
-						resultSet.getString("last_name"), resultSet.getString("email"), resultSet.getString("username"),
+						resultSet.getString("last_name"), resultSet.getString("username"), resultSet.getString("email"),
 						resultSet.getString("password"), resultSet.getString("phone"),
 						resultSet.getString("avatar_path"), resultSet.getTimestamp("created").toInstant(),
 						UserStatus.valueOf(resultSet.getString("status")),
@@ -123,10 +126,16 @@ public class UserDao {
 		Connection connection = null;
 		ResultSet resultSet = null;
 		boolean result = false;
-		Object values[] = { user.getAvatarPath(), user.getEmail(), user.getFirstName(),
-				user.getLastName(), user.getPassword(), user.getPhone(), user.getStatus().toString(),
-				user.getType().toString(), user.getAddress(),user.getCity(),user.getCountry(), user.getUsername() };
+
 		try {
+			String password=MD5.getMd5(user.getPassword());
+			if(user.getType()==UserType.WEBSHOP) {
+				password = BCrypt.withDefaults().hashToString(10, user.getPassword().toCharArray());
+			}
+				
+			Object values[] = { user.getAvatarPath(), user.getEmail(), user.getFirstName(),
+					user.getLastName(), password, user.getPhone(), user.getStatus().toString(),
+					user.getType().toString(), user.getAddress(),user.getCity(),user.getCountry(), user.getUsername() };
 			connection = connectionPool.checkOut();
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, ADD_USER, true, values);
 			preparedStatement.executeUpdate();
@@ -146,8 +155,8 @@ public class UserDao {
 
 	public static boolean update(UserBean user) throws SQLException {
 		Connection connection = null;
-		Object values[] = { user.getAvatarPath(), user.getEmail(), user.getFirstName(),
-				user.getLastName(), user.getPassword(), user.getPhone(), user.getStatus().toString(),
+		Object values[] = {  user.getEmail(), user.getFirstName(),
+				user.getLastName(), user.getPhone(), user.getStatus().toString(),
 				user.getType().toString(), user.getUsername(),user.getAddress(),user.getCity(),user.getCountry(), user.getId() };
 		try {
 			connection = connectionPool.checkOut();
@@ -178,14 +187,13 @@ public class UserDao {
 		}
 		return result;
 	}
-	public static Boolean loginUser(String username,String password) throws SQLException {
+	public static Boolean loginUser(String username,String password) throws SQLException, NoSuchAlgorithmException {
 		Connection connection = null;
 		ResultSet resultSet = null;
 		if(username.isBlank()||password.isBlank())
 			return false;
-
-		Object values[] = { username,password };
 		try {
+			Object values[] = { username,MD5.getMd5(password) };
 			connection = connectionPool.checkOut();
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, LOGIN, false, values);
 
@@ -198,7 +206,7 @@ public class UserDao {
 		}
 		return false;
 	}
-   public static void main(String...args) throws SQLException {
+   public static void main(String...args) throws SQLException, NoSuchAlgorithmException {
 	   System.out.println(UserDao.loginUser("u", "p"));
    }
 }

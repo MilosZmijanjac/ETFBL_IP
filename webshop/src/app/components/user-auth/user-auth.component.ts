@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators';
 //import { UserService } from '../services/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { TokenModel } from 'src/app/models/domains/TokenModel';
-import { LOCALSTORAGE_TOKEN_KEYS ,LOCALSTORAGE_USER_KEYS} from 'src/app/app.module';
+import { LOCALSTORAGE_TOKEN_KEYS, LOCALSTORAGE_USER_KEYS } from 'src/app/app.module';
 import { Router } from '@angular/router';
 import { FileService } from 'src/app/services/file.service';
 import { UserInfoResponse } from 'src/app/models/responses/UserInfoResponse';
@@ -21,11 +21,13 @@ import { UserInfoResponse } from 'src/app/models/responses/UserInfoResponse';
 export class UserAuthComponent implements OnInit {
   showLogin: boolean = true;
   showPin: boolean = false;
+  failedLogin:boolean=false;
   closeResult: string = '';
   authError: string = "";
   tokens: TokenModel | any;
-  userInfo:UserInfoResponse|any;
-  constructor(private userService: UserService, private modalService: NgbModal, private jwtHelper: JwtHelperService, private product: ProductService,private fileService:FileService ,private router: Router) {
+  userInfo: UserInfoResponse | any;
+  formData!:FormData
+  constructor(private userService: UserService, private modalService: NgbModal, private jwtHelper: JwtHelperService, private product: ProductService, private fileService: FileService, private router: Router) {
 
   }
 
@@ -42,11 +44,13 @@ export class UserAuthComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-  
+
   signUp(data: NgForm) {
     this.userService.register(data.value).subscribe(
       data => {
         console.log('Account created sucessfully!');
+        if(this.formData!==null)
+        this.fileService.uploadProfile(this.formData,data.username).subscribe();
         this.openLogin();
       },
       error => {
@@ -60,6 +64,7 @@ export class UserAuthComponent implements OnInit {
     this.userService.login(data.value.username, data.value.password).subscribe(
       data => {
         this.tokens = data;
+        this.failedLogin=false;
         if (this.jwtHelper.decodeToken(this.tokens.access_token).roles[0] === "WEBSHOP_PENDING")
           this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
@@ -68,14 +73,21 @@ export class UserAuthComponent implements OnInit {
           });
         else if (this.jwtHelper.decodeToken(this.tokens.access_token).roles[0] === "WEBSHOP") {
           localStorage.setItem(LOCALSTORAGE_TOKEN_KEYS, JSON.stringify(this.tokens));
+          let userString: string | null = localStorage.getItem(LOCALSTORAGE_USER_KEYS);
+          if (userString === null) {
+            this.userService.getUserInfo(this.jwtHelper.decodeToken(this.tokens.access_token).sub).subscribe(res => {
+              this.userInfo = res;
+              localStorage.setItem(LOCALSTORAGE_USER_KEYS, JSON.stringify(this.userInfo));
+            });}
           this.router.navigate(['cart']).then(() => {
             window.location.reload();
           });
         }
-        
+
       }
       ,
       error => {
+        this.failedLogin=true;
         console.log('An error occured!');
       }
     );
@@ -91,7 +103,7 @@ export class UserAuthComponent implements OnInit {
   enterPin(pin1: any, pin2: any, pin3: any, pin4: any, conent: any): void {
     let username: string = this.jwtHelper.decodeToken(this.tokens.access_token).sub;
     let pinCode: string = pin1.value + pin2.value + pin3.value + pin4.value
-    this.userService.checkPin({ username, pinCode }).pipe(tap(() => this.router.navigate(['cart']).then(() => {
+    this.userService.checkPin({ username, pinCode }).pipe(tap(() => this.router.navigate(['']).then(() => {
       window.location.reload();
     }))).subscribe(
       data => {
@@ -107,20 +119,16 @@ export class UserAuthComponent implements OnInit {
     )
 
   }
-  onFileSelected(event:any) {
+  onFileSelected(event: any) {
 
-    const file:File = event.target.files[0];
+    const file: File = event.target.files[0];
 
     if (file) {
-
-
-        const formData = new FormData();
-
-        formData.append("files", file);
-
-       this.fileService.upload(formData).subscribe();
+      this.formData = new FormData();
+      this.formData.append("files", file);
+      
     }
-}
+  }
   move(e: any, p: any, c: any, n: any) {
     var length = c.value.length;
     var maxlenght = c.getAttribute("maxlength");

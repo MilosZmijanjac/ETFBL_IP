@@ -10,8 +10,6 @@ public class LogBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-    private Long user_id;
-    private String username = "";
     private LogType type;
     private String path;
     private String message;
@@ -21,12 +19,10 @@ public class LogBean implements Serializable {
 		super();
 	}
 
-	public LogBean(Long id, Long user_id, String username, LogType type, String path, String message,
+	public LogBean(Long id,  LogType type, String path, String message,
 			Instant timestamp) {
 		super();
 		this.id = id;
-		this.user_id = user_id;
-		this.username = username;
 		this.type = type;
 		this.path = path;
 		this.message = message;
@@ -41,21 +37,6 @@ public class LogBean implements Serializable {
 		this.id = id;
 	}
 
-	public Long getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	public LogType getType() {
 		return type;

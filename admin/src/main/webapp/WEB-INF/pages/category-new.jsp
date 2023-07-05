@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="model.bean.UserBean"%>
-<%@page import="model.bean.LocationBean"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,10 +22,6 @@
                 <label for="aname" class="form-label">Name:</label>
                 <input type="text" class="form-control" id="cname" placeholder="Enter name" name="cname">
                 </div>
-                  <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
-  				<label for="formFile" class="form-label">Profile picture:</label>
-  				<input class="form-control" type="file" id="formFile" name="file" >
-				</div>
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-4">
                 <button type="submit" class="btn btn-primary btn-block" >Submit</button>
                 </div>

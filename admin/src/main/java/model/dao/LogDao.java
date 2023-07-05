@@ -15,9 +15,9 @@ import util.DaoUtil;
 public class LogDao {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 	
-	private static final String SELECT_ALL_DESC = "SELECT * FROM public.log ORDER BY timestamp DESC;";
-	private static final String SELECT_WITH_PAGINATION="SELECT * FROM public.log ORDER BY timestamp DESC OFFSET ? LIMIT ? ";
-	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.log;";
+	private static final String SELECT_ALL_DESC = "SELECT * FROM public.logs ORDER BY timestamp DESC;";
+	private static final String SELECT_WITH_PAGINATION="SELECT * FROM public.logs ORDER BY timestamp DESC OFFSET ? LIMIT ? ";
+	private static final String COUNT_ALL="SELECT COUNT(*) FROM public.logs;";
 	
 	public static List<LogBean> getAll() throws SQLException {
 		Connection connection = null;
@@ -29,8 +29,8 @@ public class LogDao {
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, SELECT_ALL_DESC, false);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				logs.add(new LogBean(resultSet.getLong("id"), resultSet.getLong("user_id"),
-						resultSet.getString("username"),LogType.valueOf(resultSet.getString("type")),
+				logs.add(new LogBean(resultSet.getLong("id"), 
+						LogType.valueOf(resultSet.getString("type")),
 						resultSet.getString("path"),resultSet.getString("message"),
 						resultSet.getTimestamp("timestamp").toInstant()));
 			}
@@ -50,8 +50,8 @@ public class LogDao {
 			PreparedStatement preparedStatement = DaoUtil.prepareStatement(connection, SELECT_WITH_PAGINATION, false,values);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				logs.add(new LogBean(resultSet.getLong("id"), resultSet.getLong("user_id"),
-						resultSet.getString("username"),LogType.valueOf(resultSet.getString("type")),
+				logs.add(new LogBean(resultSet.getLong("id"),
+					 LogType.valueOf(resultSet.getString("type")),
 						resultSet.getString("path"),resultSet.getString("message"),
 						resultSet.getTimestamp("timestamp").toInstant()));
 			}

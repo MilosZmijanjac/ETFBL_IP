@@ -1,0 +1,97 @@
+<button class="button float" data-bs-toggle="tooltip" data-bs-placement="top" title="Add new product" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-whatever="@getbootstrap" ><img src="../../assets/icons/add-new.png" width="35" height="35"></button>
+
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add new product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form  #newProductForm="ngForm" class="common-form" (ngSubmit)="createNewProduct(newProductForm)">
+            <div class="mb-3">
+              <label for="categories" class="col-form-label">Category:</label>
+              <select name="category" [(ngModel)]="selectedCategory" (change)="getAttributes()"class="form-select" required id="categories">
+                <option *ngFor="let category of categories" [ngValue]="category" >
+                    {{category.name}}
+                </option>
+            </select>
+            </div>
+            <div class="mb-3">
+                <label for="title"class="col-form-label">Title:</label>
+                <input type="text" class="form-control" ngModel required name="title" id="title">
+              </div>
+              <div class="mb-3">
+                <label for="description"class="col-form-label">Description:</label>
+                <input type="text" class="form-control" ngModel  required name="description" id="description">
+              </div>
+            <div class="mb-3">
+              <label for="price"class="col-form-label">Price:</label>
+              <input type="text" class="form-control" ngModel required name="price" id="price">
+            </div>
+            <div class="mb-3">
+              <label for="state"class="col-form-label" >State:</label>
+              <select class="form-select" aria-label="Default select example" id="state" name="state" [(ngModel)]="selectedState">
+                <option value="NEW">New</option>
+                <option value="USED">Used</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="address"class="col-form-label">Address:</label>
+              <input type="text" class="form-control" ngModel name="address" id="address">
+            </div>
+            <div class="mb-3">
+              <label for="city"class="col-form-label">City:</label>
+              <input type="text" class="form-control" ngModel name="city" id="city">
+            </div>
+            <div class="mb-3">
+              <label for="country"class="col-form-label">Country:</label>
+              <input type="text" class="form-control" ngModel name="country" id="country">
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Picture:</label>
+                <input class="form-control" type="file"  (change)="onFileSelected($event)"  ngModel id="formFile" name="imagesPath" >
+              </div>
+            <div *ngIf="selectedCategory" >
+              <div class="mb-3" *ngFor="let subcategory of attributes; let i = index">
+                <label for="{{subcategory.name}}"class="col-form-label">{{subcategory.name}}:</label>
+                <input type="text" class="form-control" ngModel name="{{subcategory.name}}" id="{{subcategory.name}}">
+              </div>
+            </div>
+          
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary"  [disabled]="newProductForm.invalid" data-bs-dismiss="modal">Create</button>
+            </div>
+          </form>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<!--
+   <form  #categoryForms="ngForm" class="common-form" (ngSubmit)="openCategories(categoryForms)">
+          <div class="mb-3">
+            <label for="categories" class="col-form-label">Categories:</label>
+            <select name="category" [(ngModel)]="selectedCategory" (change)="getAttributes()"class="form-select"  id="categories">
+              <option [ngValue]="null">All</option>
+              <option *ngFor="let category of categories" [ngValue]="category" >
+                  {{category.name}}
+              </option>
+          </select>
+          </div>
+          <div *ngIf="selectedCategory" >
+            <div class="mb-3" *ngFor="let subcategory of attributes">
+              <label for="field"class="col-form-label">{{subcategory.name}}:</label>
+              <input type="text" name="field" id="field">
+            </div>
+          </div>
+        
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary"  [disabled]="categoryForms.invalid" data-bs-dismiss="modal">Send message</button>
+          </div>
+        </form>
+  
+  <option [ngValue]="subcategory" *ngFor="let subcategory of attributes">{{subcategory.name}}</option>-->

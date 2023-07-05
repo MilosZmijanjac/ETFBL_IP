@@ -49,7 +49,8 @@ body {
 }
 
 .container-fluid {
-    margin-top: 70px
+    margin-top: 70px;
+    padding: 0;
 }
 
 .card-body {
@@ -97,6 +98,7 @@ a {
     background-color: #fff;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, .125);
+    border-color: #fff;
     border-radius: 0px
 }
 
@@ -118,9 +120,6 @@ a {
     margin-bottom: 5px
 }
 
-.coupon {
-    border-radius: 1px
-}
 
 .price {
     font-weight: 600;

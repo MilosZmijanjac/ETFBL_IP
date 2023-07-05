@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="model.bean.UserBean"%>
-<%@page import="model.bean.LocationBean"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,11 +81,6 @@
   						<option value="PENDING">PENDING</option>
 				</select>
                 </div>
-                <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
-  				<label for="formFile" class="form-label">Profile picture:</label>
-  				<input class="form-control" type="file" id="formFile" name="file" >
-  				  				
-				</div>
            </div>
                <div class="row">
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-2">

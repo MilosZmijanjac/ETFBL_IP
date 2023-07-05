@@ -6,6 +6,10 @@ import { ProductsComponent } from './components/products/products.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { CartComponent } from './components/cart/cart.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
+import { OrdersComponent } from './components/orders/orders.component';
+import { UserProductsComponent } from './components/user-products/user-products.component';
+import { CommentsComponent } from './components/comments/comments.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 const routes: Routes = [{
   component:HomeComponent,
@@ -25,6 +29,18 @@ const routes: Routes = [{
 },{
   component:UserDetailsComponent,
   path:'profile'
+},{
+  component:OrdersComponent,
+  path:'orders'
+},{
+  component:UserProductsComponent,
+  path:'user-products'
+},{
+  component:CommentsComponent,
+  path:'details/:productId/comments'
+},{
+  component:LoadingComponent,
+  path:'loading'
 }];
 
 @NgModule({

@@ -1,23 +1,61 @@
-<div class="row product-details" *ngIf="productData">
-    <div class="col-sm-6">
-    <img  class="product-img" src="{{productData.image}}" alt="">
-    </div>
-    <div class="col-sm-6">
-        <div class="details">
-            <h1>{{productData.name}}</h1>
-            <h3>Price : {{productData.price}}</h3>
-            <div>Color :<h3 [style.backgroundColor]="productData.color" class="product-color"></h3></div>
-            <h6>Category : {{productData.category}}</h6>
-            <h6>Description : {{productData.description}}</h6>
-            <button class="form-button">Buy Now</button>
-            <button *ngIf="removeCart" class="form-button" >Remove to Cart</button>
-            <button *ngIf="!removeCart" class="form-button" >Add to Cart</button>
-            <div class="quantity-group">
-                <button >-</button>
-                <input type="text" value="{{productQuantity}}" />
-                <button >+</button>
-    
+<div class="container">
+    <div class="row product-details" *ngIf="productData">
+        <div class="col-sm-6">
+        <img  class="product-img" src="{{productData.imagesPath}}" alt="" height="60" width="60">
+        </div>
+        <div class="col-sm-6">
+            <div class="details">
+                <h1>{{productData.title}}</h1>
+                <h3>Price : {{productData.price}}</h3>
+                <h6>Category : {{productData.categoryId}}</h6>
+                <h6>State : {{productData.state}}</h6>
+                <h6>Description : {{productData.description}}</h6>
+                <h6>Address : {{productData.address}}</h6>
+                <h6>City : {{productData.city}}</h6>
+                <h6>Country : {{productData.country}}</h6>
+                <h6 *ngFor="let item of productData.extendedAttributes">{{item.name}} : {{item.value}} {{item.unit}}</h6>
+                <button  class="btn btn-primary" *ngIf="userInfo==null||userInfo.id!=productData.userId" (click)="addToCart()">Add to Cart</button>
+                <button  class="btn btn-primary" *ngIf="userInfo==null||userInfo.id!=productData.userId" data-bs-toggle="modal" data-bs-target="#userInfoModal" data-bs-whatever="@getbootstrap">Seller info</button>
+                <button  class="btn btn-primary" *ngIf="userInfo!=null&&userInfo.id==productData.userId&&this.productData.status=='ACTIVE'" (click)="endProduct()">End product</button>
+                <button  class="btn btn-primary" *ngIf="userInfo!=null&&userInfo.id==productData.userId&&this.productData.status!='ACTIVE'" (click)="activateProduct()">Activate product</button>
+                <button  class="btn btn-primary" *ngIf="userInfo!=null&&userInfo.id==productData.userId" (click)="deleteProduct()">Delete</button>
+             
             </div>
         </div>
+        </div>
+        <app-comments [productId]="productId"></app-comments>
+</div>
+
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userInfoModalLabel">Seller:</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <div style="display: flex;
+                justify-content: center;"><img src={{sellerInfo.avatarPath}} height="70px" width="70px"/></div>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Username: </label>
+                <label class="col-form-label">{{sellerInfo.username}}</label>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Full name: </label>
+                <label class="col-form-label">{{sellerInfo.firstName+" "+sellerInfo.lastName}}</label>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Location: </label>
+                <label class="col-form-label">{{sellerInfo.address+", "+sellerInfo.city+", "+sellerInfo.country}}</label>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Contact: </label>
+                <label class="col-form-label">{{sellerInfo.email+", "+sellerInfo.phone}}</label>
+              </div>
+        </div>
+     
     </div>
-    </div>
+  </div>
+</div>

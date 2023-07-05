@@ -11,7 +11,6 @@ import ip.webshop.model.entity.Product;
 import ip.webshop.model.enumeration.CommentStatus;
 import ip.webshop.repository.CommentRepository;
 import ip.webshop.repository.ProductRepository;
-import ip.webshop.repository.UserRepository;
 import ip.webshop.service.CommentService;
 
 @Service
@@ -20,8 +19,6 @@ public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepository;
     @Autowired
     ProductRepository productRepository;
-    @Autowired
-    UserRepository userRepository;
 
     @Override
     public List<Comment> getAllCommentsForProduct(Long productId) {
@@ -44,14 +41,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(Comment comment) {
-        commentRepository.save(comment);
+    public Comment addComment(Comment comment) {
+       return commentRepository.save(comment);
     }
 
     @Override
     public List<Comment> getAllUnreadCommentsForUserProducts(Long userId) {
         List<Comment> comments=new ArrayList<Comment>();
-        List<Product> products=productRepository.findByUser(userRepository.findById(userId).get());
+        List<Product> products=productRepository.findByUserId(userId);
         for(Product product:products){
             comments.addAll(commentRepository.findByProductIdAndStatus(product.getId(), CommentStatus.UNREAD));
         }

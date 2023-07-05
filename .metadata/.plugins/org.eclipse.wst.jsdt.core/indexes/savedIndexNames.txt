@@ -1,9 +1,5 @@
 INDEX VERSION 1.4+C:\Users\Zmijanjac\Desktop\ETFBL_IP\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-2059603259.index
-3050220133.index
-2460039919.index
-3950205972.index
+3271193799.index
 2225247044.index
-4063701355.index
-304287421.index
-4128545737.index
+3117473032.index
+2059603259.index

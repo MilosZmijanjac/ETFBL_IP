@@ -12,4 +12,5 @@ public class Attribute implements Serializable{
     private String value;
     private String unit;
     private String possibleValues;    
+    private Long categoryId;
 }

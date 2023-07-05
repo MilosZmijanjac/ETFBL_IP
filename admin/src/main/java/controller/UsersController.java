@@ -6,9 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.bean.UserBean;
-import model.dao.CommentDao;
-import model.dao.OrderDao;
-import model.dao.OrderItemDao;
 import model.dao.ProductDao;
 import model.dao.UserDao;
 import model.enumeration.UserStatus;
@@ -95,9 +92,15 @@ public class UsersController extends HttpServlet {
 			user.setType(UserType.valueOf(request.getParameter("type")));
 			user.setStatus(UserStatus.valueOf(request.getParameter("status")));
 			user.setPhone(request.getParameter("phone"));
-			user.setAvatarPath(request.getParameter("file"));
+			user.setAvatarPath("../storage/Users/profile.png");
 			UserDao.add(user);
-	
+			/* try {
+				 Path root = Paths.get("../storage/Users"); 
+				 Files.createDirectories(Path.of(root.toString(), user.getUsername()));
+			      
+			    } catch (Exception e) {
+			      throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+			    }*/
 			response.sendRedirect("/admin/users");
 			
 		} catch (SQLException e) {
@@ -156,10 +159,7 @@ public class UsersController extends HttpServlet {
 		Long id = Long.parseLong(request.getParameter("id"));
 		try {
 			UserDao.deleteById(id);
-			OrderItemDao.deleteByUserId(id);
-			OrderDao.deleteByUserId(id);
 			ProductDao.deleteByUserId(id);
-			CommentDao.deleteByUserId(id);
 			
 			response.sendRedirect("/admin/users");
 		} catch (IOException | SQLException e) {

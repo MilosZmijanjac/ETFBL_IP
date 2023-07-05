@@ -22,7 +22,6 @@ public class SupportMessage {
     private String text;
     private Boolean read=false;
     private Instant sentTime;
-    private Long userId;
     private String username;
     private String userMail;
     

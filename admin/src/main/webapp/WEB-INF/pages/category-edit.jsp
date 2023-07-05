@@ -24,10 +24,6 @@
                 <label for="aname" class="form-label">Name:</label>
                 <input type="text" class="form-control" id="cname" value="<%=category.getName() %>" name="cname">
                 </div>
-                  <div class="col-xs-4 col-md-4 col-sm-4 mt-2">
-  				<label for="formFile" class="form-label">Profile picture:</label>
-  				<input class="form-control" type="file" id="formFile" value=<%=category.getIconPath() %> name="file" >
-				</div>
                 <div class="col-xs-4 col-md-4 col-sm-4 mt-4">
                 <input type="hidden" value=<%=category.getId() %> name="id"> 
                 <button type="submit" class="btn btn-primary btn-block" >Submit</button>

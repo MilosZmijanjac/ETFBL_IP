@@ -1,6 +1,7 @@
 package model.bean;
 
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.Instant;
 
@@ -125,7 +126,7 @@ public class UserBean implements Serializable{
 		this.phone = phone;
 	}
 
-	public Boolean login(String u,String p) throws SQLException {
+	public Boolean login(String u,String p) throws SQLException, NoSuchAlgorithmException {
 		 return UserDao.loginUser(u, p);
 	}
 

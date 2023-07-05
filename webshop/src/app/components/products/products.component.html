@@ -1,39 +1,30 @@
-
 <div class="products d-flex" id="wrapper">
-
-    <!-- Sidebar -->
-  
-   <!-- <div class="bg-light border-right" id="sidebar-wrapper"  [ngClass]="status ? 'hide' : 'show'">
-      <div class="sidebar-heading" (click)="clickEvent()">Filter </div>
-      <div class="list-group list-group-flush">
-        <a href="#" class="list-group-item list-group-item-action bg-light">Dashboard</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Shortcuts</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Status</a>
-      </div>
-    </div>-->
-    <!-- /#sidebar-wrapper -->
-  
-    <!-- Page Content -->
     <div id="page-content-wrapper">          
          <div class="container-fluid">
         <infinite-scroll class="container row justify-content-center" (scrolled)="onScroll()">
-            <ng-container *ngFor="let item of trendyProducts">
-                <div class="card col-md-2">
+            <ng-container *ngFor="let item of productsToShow.slice(0,(this.currentPage - 1) * this.itemsPerPage+this.itemsPerPage)">
+                <div class="card col-md-2" >
                     <div class="image-container container-fluid">
-                        <img src="{{item.image}}" alt="" class="product-image">
+                        <img src="{{item.imagesPath}}" alt="" class="product-image" routerLink="/details/{{item.id}}">
                         <img src="../../assets/icons/card-cart.png" alt="" class="cart-image" (click)="addToCart(item)">
                     </div>
-                    <h5>{{item.name}}</h5>
+                    <h5>{{item.title}}</h5>
                     <label><strong>Price:</strong> ${{item.price}}</label>
                 </div>
             </ng-container>
         </infinite-scroll>
       </div>
     </div>
-    <!-- /#page-content-wrapper -->
-    <app-categories></app-categories>
+    <app-categories (productFilter)="filter($event)"></app-categories>
   </div>
-  <!-- /#wrapper -->
+
+  <ng-container *ngIf="productsToShow.length==0">
+    <div class="container1">
+        <div class="card1">
+            <h5 class="card-title1">No Products</h5>
+        </div>
+        <div class="center1">
+            <img src="..\..\assets\icons\emptyCart.png" alt="">
+        </div>
+    </div>
+</ng-container>

@@ -9,8 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ip.webshop.model.enumeration.PaymentMethod;
@@ -23,9 +21,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String username;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     private BigDecimal totalPrice;

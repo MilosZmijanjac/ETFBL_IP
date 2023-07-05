@@ -1,5 +1,6 @@
 package ip.webshop.service.implementation;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -20,7 +21,7 @@ import ip.webshop.service.FilesStorageService;
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-  private final Path root = Paths.get("uploads");
+  private final Path root = Paths.get("../storage/Users");
 
   @Override
   public void init() {
@@ -32,12 +33,27 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   }
 
   @Override
-  public void save(MultipartFile file) {
+  public void saveProfilePic(MultipartFile file, String username) {
     try {
       try (InputStream inputStream = file.getInputStream()) {
-				Files.copy(inputStream, this.root.resolve(file.getOriginalFilename()),
-					StandardCopyOption.REPLACE_EXISTING);
-			}
+        Files.createDirectories(Path.of(root.toString(), username));
+        Files.copy(inputStream,
+            this.root.resolve(username + "/" + file.getOriginalFilename().replaceFirst(".*.", "profile.png")),
+            StandardCopyOption.REPLACE_EXISTING);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+    }
+  }
+
+  @Override
+  public void saveProductPic(MultipartFile file, String username, Long id) {
+    try {
+      try (InputStream inputStream = file.getInputStream()) {
+        Path path = Files.createDirectories(Path.of(root.toString(), username, "products", Long.toString(id)));
+        Files.copy(inputStream, path.resolve(file.getOriginalFilename().replaceFirst(".*.", "product.png")),
+            StandardCopyOption.REPLACE_EXISTING);
+      }
     } catch (Exception e) {
       throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
     }
@@ -68,8 +84,8 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   public Stream<Path> loadAll() {
     try {
       return Files.walk(this.root, 1)
-      .filter(path -> !path.equals(this.root))
-      .map(this.root::relativize);
+          .filter(path -> !path.equals(this.root))
+          .map(this.root::relativize);
     } catch (IOException e) {
       throw new RuntimeException("Could not load the files!");
     }

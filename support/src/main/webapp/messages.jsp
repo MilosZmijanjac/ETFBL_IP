@@ -67,7 +67,6 @@
 					<th>#</th>
 					<th>Id</th>
 					<th>Timestamp</th>
-					<th>User Id</th>
 					<th>Username</th>
 					<th>E-mail</th>
 					<th>Actions</th>
@@ -79,7 +78,6 @@
 					<td><%=(pagging-1)*recordsPerPage+i++ %></td>
 					<td><%=message.getId() %></td>
 					<td><%=message.getSentTime().toString().replaceAll("\\..*", "").replace('T',' ')%></td>
-					<td><%=message.getUserId() %></td>
 					<td><%=message.getUsername() %></td>
 					<td><%=message.getUserMail() %></td>
 					<td><a href="message.jsp?id=<%=message.getId() %>">Read</a></td>

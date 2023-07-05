@@ -86,12 +86,18 @@
 
       <p class="invalid-input text-danger"><span *ngIf="password.invalid && password.touched ">Please enter valid
           input</span></p>
+       
       <button [disabled]="userLogin.invalid" type="submit"
         class="btn btn-primary mb-3">Login</button>
       <p>Want to Create Account ? <a (click)="openSignUp()" class="text-primary">Click Here</a></p>
     </form>
   </div>
-  
+  <dialog *ngIf="failedLogin" open style="border-width: 0;">
+    <p>Login failed!!!</p>
+    <form method="dialog">
+      <button class="btn btn-primary">OK</button>
+    </form>
+  </dialog>
   <ng-template #mymodal let-modal>
     <div class="modal-content">
       <div class="modal-header">

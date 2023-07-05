@@ -1,0 +1,9 @@
+.float{
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    border-radius:100%;
+    border-color: #3B71CA;
+    background-color: #3B71CA;
+    box-shadow: 10px 10px 5px #aaaaaa;
+}

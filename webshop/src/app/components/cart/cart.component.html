@@ -46,6 +46,10 @@
                         <dt>Grand total price:</dt>
                         <dd class="text-right ml-3">${{grandTotal}}</dd>
                     </dl>
+                    <select class="form-select"  [(ngModel)]="paymentMethod">
+                        <option disabled selected value="">Payment</option>
+                        <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
+                      </select>
                     <hr> <a (click)="checkout()" class="btn btn-out btn-primary btn-square btn-main" data-abc="true"> Make Purchase </a> <a routerLink="/products"  class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Continue Shopping</a>
                 </div>
             </div>
@@ -58,7 +62,7 @@
             <h5 class="card-title">My Cart</h5>
         </div>
         <div class="center">
-            <img src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90" alt="">
+            <img src="..\..\assets\icons\emptyCart.png" alt="">
             <h4>Your cart is empty!</h4>
             <h6>Add item to it now</h6>
             <button routerLink="/products" class="btn btn-primary">Shop Now</button>

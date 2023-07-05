@@ -29,7 +29,6 @@
 					<th>#</th>
 					<th>Id</th>
 					<th>Name</th>
-					<th>Icon path</th>
 					<th>Additional attributes</th>
 					<th>Actions</th>
 				</tr>
@@ -40,7 +39,6 @@
 					<td><%=i++ %></td>
 					<td><%=cat.getId() %></td>
 					<td><%=cat.getName()%></td>
-					<td><%=cat.getIconPath() %></td>
 					<td><a href="/admin/categories/attributes?id=<%=cat.getId()%>">Attributes</a></td>
 					<td>
 						<a href="/admin/categories/edit?id=<%=cat.getId()%>">Edit</a>

@@ -11,7 +11,6 @@ public class MessageBean implements Serializable {
 	private String text;
 	private Boolean read;
 	private Instant sentTime;
-	private Long userId;
 	private String username;
 	private String userMail;
 
@@ -19,14 +18,13 @@ public class MessageBean implements Serializable {
 		super();
 	}
 
-	public MessageBean(long id, String text, boolean read, Instant sentTime, long userId, String username,
+	public MessageBean(long id, String text, boolean read, Instant sentTime, String username,
 			String userMail) {
 		super();
 		this.id = id;
 		this.text = text;
 		this.read = read;
 		this.sentTime = sentTime;
-		this.userId = userId;
 		this.username = username;
 		this.userMail = userMail;
 	}
@@ -61,14 +59,6 @@ public class MessageBean implements Serializable {
 
 	public void setSentTime(Instant sentTime) {
 		this.sentTime = sentTime;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getUsername() {
